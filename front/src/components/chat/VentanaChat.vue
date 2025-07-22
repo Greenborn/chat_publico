@@ -91,8 +91,21 @@
     </div>
   </div>
 
-  <div v-if="estadoConexion" class="alert alert-warning text-center py-1 my-2" style="font-size:0.9em;">
-    {{ estadoConexion }}
+  <div v-if="mostrarModalEstado" class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.3);">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Estado de la conexión</h5>
+          <button type="button" class="btn-close" @click="cerrarModalEstado"></button>
+        </div>
+        <div class="modal-body">
+          <p>{{ estadoConexion }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" @click="cerrarModalEstado">Cerrar</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -121,6 +134,7 @@
   const maxReconnectAttempts = 10
   const reconnectBaseDelay = 1000 // ms
   const estadoConexion = ref('')
+  const mostrarModalEstado = ref(false)
 
   function click_tab( chat ){
     for(let c=0; c < chats_abiertos.value.length; c++){
@@ -191,27 +205,37 @@
     }
   }
 
+  function mostrarEstado(mensaje) {
+    estadoConexion.value = mensaje
+    mostrarModalEstado.value = true
+  }
+
+  function cerrarModalEstado() {
+    mostrarModalEstado.value = false
+  }
+
   function conectarWebSocket() {
-    estadoConexion.value = 'Conectando...'
+    mostrarEstado('Conectando...')
     conexion.value = new WebSocket(import.meta.env.VITE_APP_API_URL)
 
     conexion.value.onopen = function() {
-      estadoConexion.value = 'Conectado'
+      mostrarEstado('Conectado')
       reconnectAttempts = 0
+      setTimeout(() => mostrarModalEstado.value = false, 1000)
     }
 
     conexion.value.onclose = function() {
-      estadoConexion.value = 'Desconectado. Reintentando...'
+      mostrarEstado('Desconectado. Reintentando...')
       if (reconnectAttempts < maxReconnectAttempts) {
         reconnectAttempts++
         setTimeout(conectarWebSocket, reconnectBaseDelay * Math.pow(2, reconnectAttempts))
       } else {
-        estadoConexion.value = 'No se pudo reconectar al servidor.'
+        mostrarEstado('No se pudo reconectar al servidor.')
       }
     }
 
     conexion.value.onerror = function() {
-      estadoConexion.value = 'Error de conexión. Reintentando...'
+      mostrarEstado('Error de conexión. Reintentando...')
       conexion.value.close()
     }
 
@@ -279,7 +303,7 @@
           break;
 
           case 'alerta':
-            alert(msgRec.msg)
+            mostrarEstado(msgRec.msg)
           break;
 
           case 'reporte_online':
@@ -326,4 +350,7 @@
   overflow-y: scroll;
 }
 
+.modal {
+  display: block;
+}
 </style>
