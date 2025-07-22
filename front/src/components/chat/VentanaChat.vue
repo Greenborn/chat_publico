@@ -90,6 +90,10 @@
       </div>
     </div>
   </div>
+
+  <div v-if="estadoConexion" class="alert alert-warning text-center py-1 my-2" style="font-size:0.9em;">
+    {{ estadoConexion }}
+  </div>
 </template>
 
 <script setup>
@@ -113,6 +117,10 @@
   })
 
   const conexion = ref({})
+  let reconnectAttempts = 0
+  const maxReconnectAttempts = 10
+  const reconnectBaseDelay = 1000 // ms
+  const estadoConexion = ref('')
 
   function click_tab( chat ){
     for(let c=0; c < chats_abiertos.value.length; c++){
@@ -183,27 +191,29 @@
     }
   }
 
-  onMounted(async ()=>{
-    chats_abiertos.value.push({
-      'id': '',
-      'activa': true,
-      'online': [],
-      'mensaje': {
-        texto: '',
-        accion: 'mensaje',
-        autor: {}
-      },
-      'es_privada': false,
-      'usuario': '',
-      'mensajes': [],
-      'titulo': 'Chat general'
-    })
+  function conectarWebSocket() {
+    estadoConexion.value = 'Conectando...'
+    conexion.value = new WebSocket(import.meta.env.VITE_APP_API_URL)
 
-    if (datos_usuario.value.id == -1){
-      modal.value.mostrar = true
+    conexion.value.onopen = function() {
+      estadoConexion.value = 'Conectado'
+      reconnectAttempts = 0
     }
 
-    conexion.value = new WebSocket( import.meta.env.VITE_APP_API_URL )
+    conexion.value.onclose = function() {
+      estadoConexion.value = 'Desconectado. Reintentando...'
+      if (reconnectAttempts < maxReconnectAttempts) {
+        reconnectAttempts++
+        setTimeout(conectarWebSocket, reconnectBaseDelay * Math.pow(2, reconnectAttempts))
+      } else {
+        estadoConexion.value = 'No se pudo reconectar al servidor.'
+      }
+    }
+
+    conexion.value.onerror = function() {
+      estadoConexion.value = 'Error de conexión. Reintentando...'
+      conexion.value.close()
+    }
 
     conexion.value.onmessage = function(event) {
       let msgRec = null
@@ -281,6 +291,29 @@
       }
 
     }
+  }
+
+  onMounted(async ()=>{
+    chats_abiertos.value.push({
+      'id': '',
+      'activa': true,
+      'online': [],
+      'mensaje': {
+        texto: '',
+        accion: 'mensaje',
+        autor: {}
+      },
+      'es_privada': false,
+      'usuario': '',
+      'mensajes': [],
+      'titulo': 'Chat general'
+    })
+
+    if (datos_usuario.value.id == -1){
+      modal.value.mostrar = true
+    }
+
+    conectarWebSocket()
   })
 
 </script>
