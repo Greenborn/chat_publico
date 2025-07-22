@@ -40,15 +40,16 @@
 
         <div class="row mt-3">
           <div class="col">
-            <b-form-input
+            <input
                   id="input-msg"
                   v-model="chat.mensaje.texto"
-                  type="text" placeholder="Mensaje"
-                  required></b-form-input>
+                  type="text" class="form-control"
+                  placeholder="Mensaje"
+                  required>
           </div>
 
           <div class="col-auto">
-            <b-button variant="success" @click="enviarMensaje( chat )">Enviar</b-button>
+            <button class="btn btn-success" @click="enviarMensaje( chat )">Enviar</button>
           </div>
         </div>
       </div>
@@ -68,17 +69,18 @@
             
             <div class="row mb-3">
               <div class="col">
-                <b-form-input
+                <input
                   id="input-nombre"
                   v-model="modelo_registro.nombre"
-                  type="text" placeholder="Nombre"
-                  required></b-form-input>
+                  type="text" class="form-control"
+                  placeholder="Nombre"
+                  required>
               </div>
             </div>
 
             <div class="row">
               <div class="col">
-                <b-button variant="success" @click="registrarse()">Registrarse</b-button>
+                <button class="btn btn-success" @click="registrarse()">Registrarse</button>
               </div>
             </div>
   
