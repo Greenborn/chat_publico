@@ -1,0 +1,20 @@
+{
+  "name": "chat-publico-front",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && zip -r dist.zip dist",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@dvuckovic/vue3-bootstrap-icons": "^1.0.5",
+    "bootstrap-vue-3": "^0.2.12",
+    "vue": "^3.2.37"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.0.3",
+    "vite": "^4.5.5"
+  }
+}
