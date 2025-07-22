@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dvuckovic/vue3-bootstrap-icons": "^1.0.5",
-    "bootstrap-vue-3": "^0.2.12",
-    "vue": "^3.2.37"
+    "@dvuckovic/vue3-bootstrap-icons": "^2.0.0",
+    "bootstrap-vue-3": "^0.5.1",
+    "vue": "^3.5.17"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.3",
