@@ -40,8 +40,10 @@
 
         <div class="row mt-3">
           <div class="col">
+            <label for="input-msg" class="form-label visually-hidden">Mensaje</label>
             <input
                   id="input-msg"
+                  ref="inputMsgRef"
                   v-model="chat.mensaje.texto"
                   type="text" class="form-control"
                   placeholder="Mensaje"
@@ -69,8 +71,10 @@
             
             <div class="row mb-3">
               <div class="col">
+                <label for="input-nombre" class="form-label visually-hidden">Nombre de usuario</label>
                 <input
                   id="input-nombre"
+                  ref="inputNombreRef"
                   v-model="modelo_registro.nombre"
                   type="text" class="form-control"
                   placeholder="Nombre"
@@ -91,12 +95,12 @@
     </div>
   </div>
 
-  <div v-if="mostrarModalEstado" class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.3);">
+  <div v-if="mostrarModalEstado" class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.3);" role="dialog" aria-modal="true" aria-labelledby="modalEstadoLabel">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Estado de la conexión</h5>
-          <button type="button" class="btn-close" @click="cerrarModalEstado"></button>
+          <h5 class="modal-title" id="modalEstadoLabel">Estado de la conexión</h5>
+          <button type="button" class="btn-close" @click="cerrarModalEstado" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <p>{{ estadoConexion }}</p>
@@ -110,7 +114,7 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, nextTick } from 'vue';
   import ListaContactos from './ListaContactos.vue'
 
   const chats_abiertos = ref([])
@@ -135,6 +139,8 @@
   const reconnectBaseDelay = 1000 // ms
   const estadoConexion = ref('')
   const mostrarModalEstado = ref(false)
+  const inputMsgRef = ref(null)
+  const inputNombreRef = ref(null)
 
   function click_tab( chat ){
     for(let c=0; c < chats_abiertos.value.length; c++){
@@ -208,10 +214,21 @@
   function mostrarEstado(mensaje) {
     estadoConexion.value = mensaje
     mostrarModalEstado.value = true
+    nextTick(() => {
+      const btn = document.querySelector('.modal .btn-close')
+      if (btn) btn.focus()
+    })
   }
 
   function cerrarModalEstado() {
     mostrarModalEstado.value = false
+  }
+
+  function abrirModalRegistro() {
+    modal.value.mostrar = true
+    nextTick(() => {
+      if (inputNombreRef.value) inputNombreRef.value.focus()
+    })
   }
 
   function conectarWebSocket() {
@@ -334,7 +351,7 @@
     })
 
     if (datos_usuario.value.id == -1){
-      modal.value.mostrar = true
+      abrirModalRegistro()
     }
 
     conectarWebSocket()
@@ -352,5 +369,16 @@
 
 .modal {
   display: block;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  border: 0 !important;
 }
 </style>
