@@ -24,7 +24,12 @@
               <div class="row flex-nowrap">
                 <div class="col col-sm-8 col-md-9 col-xxl-10 mensaje-cont-dark p-3 rounded-start">
                   <div class="msg-list">
-                    <div class="msg-item mb-2 d-flex" v-for="(msg) in chat.mensajes" :key="msg">
+                    <div 
+                      class="msg-item mb-2 d-flex" 
+                      v-for="(msg, idx) in chat.mensajes" 
+                      :key="msg"
+                      :ref="idx === chat.mensajes.length - 1 ? setLastMsgRef : null"
+                    >
                       <div class="msg-bubble px-3 py-2 rounded shadow-sm"
                         :class="msg.autor.id == datos_usuario.id ? 'bg-gradient-dark-green text-white align-self-end' : 'bg-dark-2 text-light align-self-start'">
                         <span class="fw-semibold">{{msg.autor.nombre}}:</span> <span>{{msg.texto}}</span>
@@ -191,6 +196,12 @@ import ListaContactos from './ListaContactos.vue';
     conexion.value.send( JSON.stringify( registro ));
   }
 
+  const lastMsgRef = ref(null);
+
+  function setLastMsgRef(el) {
+    if (el) lastMsgRef.value = el;
+  }
+
   function enviarMensaje( chat ){
     if (chat.mensaje.texto !== ''){
       if (chat.es_privada){
@@ -201,6 +212,11 @@ import ListaContactos from './ListaContactos.vue';
       chat.mensaje.autor = datos_usuario.value
       conexion.value.send( JSON.stringify( chat.mensaje ))
       chat.mensaje.texto = ''
+      nextTick(() => {
+        if (lastMsgRef.value) {
+          lastMsgRef.value.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+      });
     }
   }
 
