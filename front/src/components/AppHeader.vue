@@ -1,7 +1,11 @@
 <template>
   <div class="row header-cont">
     <div class="col">
-      <h1>Chat público Tandil</h1>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded mb-3">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Chat público Tandil</a>
+        </div>
+      </nav>
       <div v-if="showAlert" class="alert alert-warning alert-dismissible" role="alert" style="margin-bottom: 1rem;">
         <div class="row">
 

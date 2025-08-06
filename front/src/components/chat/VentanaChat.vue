@@ -95,22 +95,6 @@
     </div>
   </div>
 
-  <div v-if="mostrarModalEstado" class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.3);" role="dialog" aria-modal="true" aria-labelledby="modalEstadoLabel">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalEstadoLabel">Estado de la conexión</h5>
-          <button type="button" class="btn-close" @click="cerrarModalEstado" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <p>{{ estadoConexion }}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="cerrarModalEstado">Cerrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script setup>
@@ -138,7 +122,6 @@
   const maxReconnectAttempts = 10
   const reconnectBaseDelay = 1000 // ms
   const estadoConexion = ref('')
-  const mostrarModalEstado = ref(false)
   const inputMsgRef = ref(null)
   const inputNombreRef = ref(null)
 
@@ -213,15 +196,10 @@
 
   function mostrarEstado(mensaje) {
     estadoConexion.value = mensaje
-    mostrarModalEstado.value = true
-    nextTick(() => {
-      const btn = document.querySelector('.modal .btn-close')
-      if (btn) btn.focus()
-    })
   }
 
   function cerrarModalEstado() {
-    mostrarModalEstado.value = false
+    // eliminado
   }
 
   function abrirModalRegistro() {
@@ -238,7 +216,7 @@
     conexion.value.onopen = function() {
       mostrarEstado('Conectado')
       reconnectAttempts = 0
-      setTimeout(() => mostrarModalEstado.value = false, 1000)
+      // eliminado
     }
 
     conexion.value.onclose = function() {
