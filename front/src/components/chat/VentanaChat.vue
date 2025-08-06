@@ -361,10 +361,12 @@ import ListaContactos from './ListaContactos.vue';
 
 .dark-bg {
   min-height: 100vh;
+  height: 100vh;
   background: linear-gradient(135deg, #181c1f 0%, #23272b 100%);
   padding-top: 2rem;
   padding-bottom: 2rem;
   color: #e0e0e0;
+  overflow-y: auto;
 }
 
 .chat-tabs-dark {
