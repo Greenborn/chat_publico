@@ -68,6 +68,10 @@
             <h5 class="card-title">Ingrese el nombre a mostrar</h5>
           </div>
           <div class="card-body">
+            <div v-if="modal.error" class="alert alert-danger alert-dismissible fade show" role="alert">
+              {{ modal.error }}
+              <button type="button" class="btn-close" aria-label="Cerrar" v-on:click="modal.error = ''"></button>
+            </div>
             
             <div class="row mb-3">
               <div class="col">
@@ -115,7 +119,8 @@ import { conexionOk } from '../../conexionStore.js';
   })
 
   const modal = ref({
-    mostrar: false
+    mostrar: false,
+    error: ''
   })
 
   // conexionOk ahora es global y reactivo
@@ -176,6 +181,14 @@ import { conexionOk } from '../../conexionStore.js';
   }
 
   function registrarse(){
+    if (!modelo_registro.value.nombre || modelo_registro.value.nombre.length < 4) {
+      modal.value.error = 'El nombre de usuario debe tener al menos 4 caracteres.';
+      return;
+    }
+    if (modelo_registro.value.nombre.length > 36) {
+      modal.value.error = 'El nombre de usuario no puede superar los 36 caracteres.';
+      return;
+    }
     let registro = {
       nombre: modelo_registro.value.nombre,
       accion: 'registro'
@@ -272,11 +285,17 @@ import { conexionOk } from '../../conexionStore.js';
             } )
           break;
 
+
           case 'registro':
-            datos_usuario.value = msgRec
-            modal.value.mostrar = false
-            chats_abiertos.value[0].id = msgRec.id_sala
-            chats_dir.value[ msgRec.id_sala ] = chats_abiertos.value[0]
+            if (msgRec.error) {
+              modal.value.error = msgRec.error;
+            } else {
+              datos_usuario.value = msgRec
+              modal.value.mostrar = false
+              chats_abiertos.value[0].id = msgRec.id_sala
+              chats_dir.value[ msgRec.id_sala ] = chats_abiertos.value[0]
+              modal.value.error = ''
+            }
           break;
 
           case 'registro_sala_privada':
