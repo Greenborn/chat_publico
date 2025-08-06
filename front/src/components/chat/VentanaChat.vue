@@ -1,108 +1,96 @@
 <template>
-  <div class="row">
-    <div class="col-12 p-2">
-<!--Tabs Salas de chat-->
-      <ul class="nav nav-tabs">
-        <li class="nav-item"
-            v-for="(chat) in chats_abiertos" :key="chat">
-          <a class="nav-link" :class="{ active: chat.activa }">
-            <span @click="click_tab(chat)">{{chat.titulo}} &nbsp;</span>
+  <div class="chat-outer-container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8 p-0">
+        <!--Tabs Salas de chat-->
+        <ul class="nav nav-tabs chat-tabs rounded-top shadow-sm">
+          <li class="nav-item" v-for="(chat) in chats_abiertos" :key="chat">
+            <a class="nav-link px-4 py-2 fw-bold" :class="{ active: chat.activa }">
+              <span @click="click_tab(chat)">{{chat.titulo}} &nbsp;</span>
+              <BootstrapIcon 
+                v-if="chat.es_privada"
+                @click="cerrar_chat(chat)"
+                icon="x-circle-fill"
+                class="text-danger ms-1 pointer" />
+            </a>
+          </li>
+        </ul>
 
-            <BootstrapIcon 
-              v-if="chat.es_privada"
-              @click="cerrar_chat(chat)"
-              icon="x-circle-fill" />
-          </a>
-        </li>
-      </ul>
-    </div>
-<!--Contenido Tabs-->
-    <div class="w-100"
-      v-for="(chat) in chats_abiertos" :key="chat">
-      
-      <div 
-        v-if="chat.activa"
-        class="col-12">
-        <div class="row">
-          <div class="col col-sm-8 col-md-9 col-xxl-10 mensaje-cont">
+        <div class="chat-content-container rounded-bottom shadow-lg bg-white">
+          <div class="w-100" v-for="(chat) in chats_abiertos" :key="chat">
+            <div v-if="chat.activa" class="col-12">
+              <div class="row flex-nowrap">
+                <div class="col col-sm-8 col-md-9 col-xxl-10 mensaje-cont p-3 bg-light rounded-start">
+                  <div class="msg-list">
+                    <div class="msg-item mb-2 d-flex" v-for="(msg) in chat.mensajes" :key="msg">
+                      <div class="msg-bubble px-3 py-2 rounded shadow-sm"
+                        :class="{ 'bg-secondary text-white align-self-start':msg.autor.id != datos_usuario.id, 'bg-primary text-white align-self-end': msg.autor.id == datos_usuario.id, 'bg-gradient': true }">
+                        <span class="fw-semibold">{{msg.autor.nombre}}:</span> <span>{{msg.texto}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ListaContactos 
+                  :online="chat.online" :datos_usuario="datos_usuario" @ir_sala_privada="ir_sala_privada"
+                  class="contactos-panel bg-white border-start rounded-end shadow-sm px-2 py-3 d-none d-md-block" />
+              </div>
 
-            <div class="row" v-for="(msg) in chat.mensajes" :key="msg">
-              <div class="col">
-                <span class="badge" :class="{ 'bg-secondary':msg.autor.id != datos_usuario.id, 'bg-primary': msg.autor.id == datos_usuario.id }">{{msg.autor.nombre}}:</span> {{msg.texto}}
+              <div class="row mt-3 align-items-center">
+                <div class="col">
+                  <label for="input-msg" class="form-label visually-hidden">Mensaje</label>
+                  <input
+                    id="input-msg"
+                    ref="inputMsgRef"
+                    v-model="chat.mensaje.texto"
+                    type="text"
+                    class="form-control form-control-lg rounded-pill shadow-sm"
+                    placeholder="Escribe tu mensaje..."
+                    required
+                    @keyup.enter="enviarMensaje(chat)"
+                  >
+                </div>
+                <div class="col-auto">
+                  <button class="btn btn-success btn-lg rounded-pill px-4 shadow-sm" @click="enviarMensaje(chat)">
+                    <BootstrapIcon icon="send-fill" class="me-2" />Enviar
+                  </button>
+                </div>
               </div>
             </div>
-
-          </div>
-
-          <ListaContactos 
-            :online="chat.online" :datos_usuario="datos_usuario" @ir_sala_privada="ir_sala_privada"></ListaContactos>
-        </div>
-
-        <div class="row mt-3">
-          <div class="col">
-            <label for="input-msg" class="form-label visually-hidden">Mensaje</label>
-            <input
-                  id="input-msg"
-                  ref="inputMsgRef"
-                  v-model="chat.mensaje.texto"
-                  type="text" class="form-control"
-                  placeholder="Mensaje"
-                  required
-                  @keyup.enter="enviarMensaje(chat)">
-          </div>
-
-          <div class="col-auto">
-            <button class="btn btn-success" @click="enviarMensaje( chat )">Enviar</button>
           </div>
         </div>
       </div>
-     
     </div>
-  </div>  
 
-  <div class="app-modal h-100" v-if="modal.mostrar">
-    <div class="row h-100">
-      <div class="mt-auto mb-auto col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
-
-        <div class="card">
-          <div class="card-header">
-            <h5 class="card-title">Ingrese el nombre a mostrar</h5>
+    <!-- Modal de registro -->
+    <div class="app-modal dark-modal-bg" v-if="modal.mostrar">
+      <div class="modal-dialog-custom">
+        <div class="card p-0 shadow-lg border-0 rounded-4 modal-card bg-dark text-white">
+          <div class="card-header bg-gradient-dark-green text-white modal-header-dark rounded-top-4 border-0 text-center py-3 px-4">
+            <h5 class="card-title mb-0">Ingrese el nombre a mostrar</h5>
           </div>
-          <div class="card-body">
+          <div class="card-body rounded-bottom-4 p-5">
             <div v-if="modal.error" class="alert alert-danger alert-dismissible fade show" role="alert">
               {{ modal.error }}
-              <button type="button" class="btn-close" aria-label="Cerrar" v-on:click="modal.error = ''"></button>
+              <button type="button" class="btn-close btn-close-white" aria-label="Cerrar" v-on:click="modal.error = ''"></button>
             </div>
-            
-
-            <div class="row mb-3">
-              <div class="col">
-                <label for="input-nombre" class="form-label visually-hidden">Nombre de usuario</label>
-                <input
-                  id="input-nombre"
-                  ref="inputNombreRef"
-                  v-model="modelo_registro.nombre"
-                  type="text" class="form-control"
-                  placeholder="Nombre"
-                  required
-                  @keyup.enter="registrarse"
-                >
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col">
-                <button class="btn btn-success" @click="registrarse()">Registrarse</button>
-              </div>
-            </div>
-  
+            <label for="input-nombre" class="form-label visually-hidden">Nombre de usuario</label>
+            <input
+              id="input-nombre"
+              ref="inputNombreRef"
+              v-model="modelo_registro.nombre"
+              type="text"
+              class="form-control form-control-lg rounded-pill shadow-sm mb-5 input-dark"
+              placeholder="Nombre"
+              required
+              @keyup.enter="registrarse"
+              autocomplete="off"
+            >
+            <button class="btn btn-success btn-lg rounded-pill w-100 shadow-sm" @click="registrarse()">Registrarse</button>
           </div>
         </div>
-
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup>
@@ -366,15 +354,141 @@ import { conexionOk } from '../../conexionStore.js';
 </script>
 
 <style scoped>
-.mensaje-cont{
-  height: 60vh;
-  border: 1px solid #000;
-  overflow-x: hidden;
-  overflow-y: scroll;
+/* Estilos mejorados para el chat */
+.chat-outer-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0f7fa 0%, #e8f5e9 100%);
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
-.modal {
-  display: block;
+.chat-tabs {
+  background: #fff;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.chat-content-container {
+  min-height: 70vh;
+  background: #fff;
+  border-radius: 0 0 1rem 1rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 0;
+}
+
+.mensaje-cont {
+  height: 55vh;
+  border: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: transparent;
+}
+
+.msg-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.msg-item {
+  width: 100%;
+}
+
+.msg-bubble {
+  max-width: 80%;
+  word-break: break-word;
+  font-size: 1.05rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-radius: 1.5rem 1.5rem 1.5rem 0.5rem;
+  margin-bottom: 0.2rem;
+}
+.msg-bubble.align-self-end {
+  margin-left: auto;
+  border-radius: 1.5rem 1.5rem 0.5rem 1.5rem;
+}
+
+.contactos-panel {
+  min-width: 180px;
+  max-width: 220px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+
+
+.app-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+.bg-gradient-dark-green {
+  background: linear-gradient(90deg, #14532d 0%, #166534 100%) !important;
+  color: #fff !important;
+}
+
+.modal-header-dark {
+  border-top-left-radius: 1.25rem !important;
+  border-top-right-radius: 1.25rem !important;
+  padding-top: 1.2rem !important;
+  padding-bottom: 1.2rem !important;
+  background: linear-gradient(90deg, #14532d 0%, #166534 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.dark-modal-bg {
+  background: rgba(10, 20, 20, 0.92);
+}
+
+.modal-dialog-custom {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.modal-card {
+  animation: modalFadeIn 0.4s cubic-bezier(.4,0,.2,1);
+  background: #181c1f !important;
+  color: #fff !important;
+  border: 1px solid #222831;
+}
+
+.bg-gradient-dark-green {
+  background: linear-gradient(90deg, #14532d 0%, #166534 100%) !important;
+  color: #fff !important;
+}
+
+.input-dark {
+  background: #23272b !important;
+  color: #fff !important;
+  border: 1px solid #2e3a3f !important;
+}
+.input-dark::placeholder {
+  color: #b0b8b8 !important;
+  opacity: 1;
+}
+
+.modal-dialog-custom {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.modal-card {
+  animation: modalFadeIn 0.4s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .visually-hidden {

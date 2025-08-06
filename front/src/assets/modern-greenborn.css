@@ -75,7 +75,7 @@ div .btn-success,
   border-color: #117a37 !important;
   color: #fff !important;
 }
-}
+
 button:hover, .btn:hover {
   background: var(--secondary-green);
 }
