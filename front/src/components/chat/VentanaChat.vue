@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-outer-container dark-bg">
+  <div class="chat-outer-container dark-bg container-fluid px-2 px-md-4">
     <div class="row justify-content-center">
       <div class="col-12 col-md-10 col-lg-8 p-0">
         <!--Tabs Salas de chat-->
@@ -381,20 +381,25 @@ import { conexionOk } from '../../conexionStore.js';
   border: none;
 }
 
+
 .chat-content-container-dark {
   min-height: 70vh;
   background: #23272b;
   border-radius: 0 0 1rem 1rem;
   box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-  padding: 0;
+  padding: 1.5rem 1rem 1rem 1rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
 }
 
 .mensaje-cont-dark {
   height: 55vh;
   border: none;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: auto;
   background: transparent;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
 }
 
 .msg-list {
@@ -409,7 +414,7 @@ import { conexionOk } from '../../conexionStore.js';
 
 
 .msg-bubble {
-  max-width: 80%;
+  max-width: 95%;
   word-break: break-word;
   font-size: 1.05rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
@@ -417,6 +422,10 @@ import { conexionOk } from '../../conexionStore.js';
   margin-bottom: 0.2rem;
   background: #23272b;
   color: #e0e0e0;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 .bg-dark-2 {
   background: #23272b !important;
@@ -434,6 +443,7 @@ import { conexionOk } from '../../conexionStore.js';
   background: #181c1f !important;
   color: #e0e0e0 !important;
   border-left: 1px solid #23272b !important;
+  margin-left: 0.5rem;
 }
 
 .pointer {
@@ -495,6 +505,8 @@ import { conexionOk } from '../../conexionStore.js';
   background: #23272b !important;
   color: #fff !important;
   border: 1px solid #2e3a3f !important;
+  padding-left: 1.2rem !important;
+  padding-right: 1.2rem !important;
 }
 .input-dark::placeholder {
   color: #b0b8b8 !important;
