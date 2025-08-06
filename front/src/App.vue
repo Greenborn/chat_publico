@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <AppHeader></AppHeader>
     <VentanaChat></VentanaChat>
     <AppFooter></AppFooter>

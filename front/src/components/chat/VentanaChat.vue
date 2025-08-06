@@ -367,6 +367,7 @@ import ListaContactos from './ListaContactos.vue';
   padding-bottom: 2rem;
   color: #e0e0e0;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .chat-tabs-dark {
@@ -394,7 +395,7 @@ import ListaContactos from './ListaContactos.vue';
   box-shadow: 0 4px 24px rgba(0,0,0,0.18);
   padding: 1.5rem 1rem 1rem 1rem;
   margin-bottom: 2rem;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 .mensaje-cont-dark {
