@@ -4,6 +4,12 @@
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded mb-3">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">Chat público Tandil</a>
+          <span class="ms-auto d-flex align-items-center">
+            <span :class="['badge', conexionOk ? 'bg-success' : 'bg-danger']" style="font-size:0.9em;">
+              <span v-if="conexionOk">Conectado</span>
+              <span v-else>Sin conexión</span>
+            </span>
+          </span>
         </div>
       </nav>
       <div v-if="showAlert" class="alert alert-warning alert-dismissible" role="alert" style="margin-bottom: 1rem;">
@@ -28,6 +34,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { conexionOk } from '../../src/conexionStore.js';
 const showAlert = ref(true);
 </script>
 

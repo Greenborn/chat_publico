@@ -98,7 +98,8 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
+import { conexionOk } from '../../conexionStore.js';
   import ListaContactos from './ListaContactos.vue'
 
   const chats_abiertos = ref([])
@@ -117,6 +118,7 @@
     mostrar: false
   })
 
+  // conexionOk ahora es global y reactivo
   const conexion = ref({})
   let reconnectAttempts = 0
   const maxReconnectAttempts = 10
@@ -211,15 +213,17 @@
 
   function conectarWebSocket() {
     mostrarEstado('Conectando...')
+
     conexion.value = new WebSocket(import.meta.env.VITE_APP_API_URL)
 
     conexion.value.onopen = function() {
+      conexionOk.value = true
       mostrarEstado('Conectado')
       reconnectAttempts = 0
-      // eliminado
     }
 
     conexion.value.onclose = function() {
+      conexionOk.value = false
       mostrarEstado('Desconectado. Reintentando...')
       if (reconnectAttempts < maxReconnectAttempts) {
         reconnectAttempts++
@@ -230,6 +234,7 @@
     }
 
     conexion.value.onerror = function() {
+      conexionOk.value = false
       mostrarEstado('Error de conexión. Reintentando...')
       conexion.value.close()
     }
