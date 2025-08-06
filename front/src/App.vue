@@ -15,14 +15,7 @@
 </script>
 
 <style>
-#app{
-  background: #444;
-}
 
-.container{
-  background: #FFF;
-  min-height: 100vh;
-}
 
 .app-modal{
   background:   rgba(0,0,0,.6);
@@ -34,3 +27,5 @@
   z-index:      1000;
 }
 </style>
+
+@import "./assets/modern-greenborn.css";

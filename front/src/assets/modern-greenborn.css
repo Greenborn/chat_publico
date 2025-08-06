@@ -1,0 +1,116 @@
+/* Estilo moderno inspirado en greenborn.com.ar */
+:root {
+  --background-dark: #181a1b;
+  --surface-dark: #23272a;
+  --text-light: #f5f5f5;
+  --dark-green: #145a32;
+  --primary-green: #00c853;
+  --secondary-green: #43a047;
+  --background: #f5f5f5;
+  --text-dark: #222;
+  --text-light: #fff;
+  --border-radius: 16px;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+}
+
+body {
+  background: var(--background-dark);
+  color: var(--text-light);
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+}
+
+header, footer {
+  background: var(--primary-green);
+  color: var(--text-light);
+  padding: 1.5rem 2rem;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+button, .btn {
+  background: var(--primary-green);
+  color: var(--text-light);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background 0.2s;
+}
+
+/* btn-primary estilo especial */
+.btn-primary {
+  background: #1a3d1a !important; /* verde oscuro por defecto */
+  color: #fff !important;
+  border: none;
+}
+.btn-primary:hover, .btn-primary:focus {
+  background: #b6f5c1 !important; /* verde claro al hover */
+  color: #1a3d1a !important; /* texto oscuro */
+}
+
+/* btn-success estilo especial */
+.btn-success,
+button.btn-success,
+input.btn-success,
+div .btn-success,
+.btn-success:active,
+.btn-success:focus,
+.btn-success:visited,
+.btn-success:focus-visible,
+.btn-success:focus-within {
+  background-color: var(--dark-green) !important;
+  border-color: var(--dark-green) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+.btn-success:hover,
+.btn-success:active:hover,
+.btn-success:focus:hover {
+  background-color: #117a37 !important;
+  border-color: #117a37 !important;
+  color: #fff !important;
+}
+}
+button:hover, .btn:hover {
+  background: var(--secondary-green);
+}
+
+.card {
+  background: var(--surface-dark);
+  color: var(--text-light);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  margin: 1rem 0;
+}
+
+input, textarea {
+  background: #222 !important;
+  color: #f5f5f5 !important;
+  border: 1.5px solid var(--dark-green) !important;
+  border-radius: 18px !important;
+  padding: 0.75rem !important;
+  font-size: 1rem !important;
+  margin-bottom: 1rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+input:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: #117a37 !important;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #e0e0e0;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary-green);
+  border-radius: 8px;
+}
