@@ -10,7 +10,7 @@
           @click="ir_sala_privada(user)"
           :class="{ 'yo-connect': user == datos_usuario.nombre }">
       <div class="col-auto">
-        <BootstrapIcon icon="person-circle" size="2x" />
+        <BootstrapIcon icon="person-circle" size="md" />
       </div>
       <div class="col pb-2 pt-2">
         {{user}}
@@ -21,6 +21,7 @@
 
 <script setup>
   import { ref, onMounted } from 'vue'
+
 
   const props = defineProps(['online', 'datos_usuario'])
   const emit  = defineEmits(['ir_sala_privada'])
@@ -63,5 +64,6 @@
 
 .yo-connect{
   background-color: #9bfff7;
+  color: black;
 }
 </style>

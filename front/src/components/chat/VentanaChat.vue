@@ -7,11 +7,13 @@
           <li class="nav-item" v-for="(chat) in chats_abiertos" :key="chat">
             <a class="nav-link px-4 py-2 fw-bold chat-tab-link-dark" :class="{ active: chat.activa }" @click="click_tab(chat)">
               <span>{{chat.titulo}} &nbsp;</span>
-              <BootstrapIcon 
-                v-if="chat.es_privada"
-                @click.stop="cerrar_chat(chat)"
-                icon="x-circle-fill"
-                class="text-danger ms-1 pointer" />
+              <span v-if="chat.es_privada">
+                <BootstrapIcon 
+                  @click.stop="cerrar_chat(chat)"
+                  icon="x-circle-fill"
+                  size="md"
+                  class="text-danger ms-1 pointer" />
+              </span>
             </a>
           </li>
         </ul>
@@ -51,7 +53,7 @@
                 </div>
                 <div class="col-auto">
                   <button class="btn btn-success btn-lg rounded-pill px-4 shadow-sm" @click="enviarMensaje(chat)">
-                    <BootstrapIcon icon="send-fill" class="me-2" />Enviar
+                    <BootstrapIcon icon="send-fill" size="md" class="me-2" />Enviar
                   </button>
                 </div>
               </div>
@@ -96,7 +98,8 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
 import { conexionOk } from '../../conexionStore.js';
-  import ListaContactos from './ListaContactos.vue'
+import ListaContactos from './ListaContactos.vue';
+
 
   const chats_abiertos = ref([])
   const chats_dir      = ref({})
