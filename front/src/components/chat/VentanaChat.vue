@@ -73,6 +73,7 @@
               <button type="button" class="btn-close" aria-label="Cerrar" v-on:click="modal.error = ''"></button>
             </div>
             
+
             <div class="row mb-3">
               <div class="col">
                 <label for="input-nombre" class="form-label visually-hidden">Nombre de usuario</label>
@@ -82,7 +83,9 @@
                   v-model="modelo_registro.nombre"
                   type="text" class="form-control"
                   placeholder="Nombre"
-                  required>
+                  required
+                  @keyup.enter="registrarse"
+                >
               </div>
             </div>
 
