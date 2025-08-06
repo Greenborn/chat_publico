@@ -5,11 +5,11 @@
         <!--Tabs Salas de chat-->
         <ul class="nav nav-tabs chat-tabs-dark rounded-top shadow-sm">
           <li class="nav-item" v-for="(chat) in chats_abiertos" :key="chat">
-            <a class="nav-link px-4 py-2 fw-bold chat-tab-link-dark" :class="{ active: chat.activa }">
-              <span @click="click_tab(chat)">{{chat.titulo}} &nbsp;</span>
+            <a class="nav-link px-4 py-2 fw-bold chat-tab-link-dark" :class="{ active: chat.activa }" @click="click_tab(chat)">
+              <span>{{chat.titulo}} &nbsp;</span>
               <BootstrapIcon 
                 v-if="chat.es_privada"
-                @click="cerrar_chat(chat)"
+                @click.stop="cerrar_chat(chat)"
                 icon="x-circle-fill"
                 class="text-danger ms-1 pointer" />
             </a>
