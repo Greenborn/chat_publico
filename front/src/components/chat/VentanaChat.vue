@@ -47,7 +47,8 @@
                   v-model="chat.mensaje.texto"
                   type="text" class="form-control"
                   placeholder="Mensaje"
-                  required>
+                  required
+                  @keyup.enter="enviarMensaje(chat)">
           </div>
 
           <div class="col-auto">
