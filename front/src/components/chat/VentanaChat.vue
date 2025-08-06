@@ -1,11 +1,11 @@
 <template>
-  <div class="chat-outer-container">
+  <div class="chat-outer-container dark-bg">
     <div class="row justify-content-center">
       <div class="col-12 col-md-10 col-lg-8 p-0">
         <!--Tabs Salas de chat-->
-        <ul class="nav nav-tabs chat-tabs rounded-top shadow-sm">
+        <ul class="nav nav-tabs chat-tabs-dark rounded-top shadow-sm">
           <li class="nav-item" v-for="(chat) in chats_abiertos" :key="chat">
-            <a class="nav-link px-4 py-2 fw-bold" :class="{ active: chat.activa }">
+            <a class="nav-link px-4 py-2 fw-bold chat-tab-link-dark" :class="{ active: chat.activa }">
               <span @click="click_tab(chat)">{{chat.titulo}} &nbsp;</span>
               <BootstrapIcon 
                 v-if="chat.es_privada"
@@ -16,15 +16,15 @@
           </li>
         </ul>
 
-        <div class="chat-content-container rounded-bottom shadow-lg bg-white">
+        <div class="chat-content-container-dark rounded-bottom shadow-lg">
           <div class="w-100" v-for="(chat) in chats_abiertos" :key="chat">
             <div v-if="chat.activa" class="col-12">
               <div class="row flex-nowrap">
-                <div class="col col-sm-8 col-md-9 col-xxl-10 mensaje-cont p-3 bg-light rounded-start">
+                <div class="col col-sm-8 col-md-9 col-xxl-10 mensaje-cont-dark p-3 rounded-start">
                   <div class="msg-list">
                     <div class="msg-item mb-2 d-flex" v-for="(msg) in chat.mensajes" :key="msg">
                       <div class="msg-bubble px-3 py-2 rounded shadow-sm"
-                        :class="{ 'bg-secondary text-white align-self-start':msg.autor.id != datos_usuario.id, 'bg-primary text-white align-self-end': msg.autor.id == datos_usuario.id, 'bg-gradient': true }">
+                        :class="msg.autor.id == datos_usuario.id ? 'bg-gradient-dark-green text-white align-self-end' : 'bg-dark-2 text-light align-self-start'">
                         <span class="fw-semibold">{{msg.autor.nombre}}:</span> <span>{{msg.texto}}</span>
                       </div>
                     </div>
@@ -32,7 +32,7 @@
                 </div>
                 <ListaContactos 
                   :online="chat.online" :datos_usuario="datos_usuario" @ir_sala_privada="ir_sala_privada"
-                  class="contactos-panel bg-white border-start rounded-end shadow-sm px-2 py-3 d-none d-md-block" />
+                  class="contactos-panel contactos-panel-dark border-start rounded-end shadow-sm px-2 py-3 d-none d-md-block" />
               </div>
 
               <div class="row mt-3 align-items-center">
@@ -43,7 +43,7 @@
                     ref="inputMsgRef"
                     v-model="chat.mensaje.texto"
                     type="text"
-                    class="form-control form-control-lg rounded-pill shadow-sm"
+                    class="form-control form-control-lg rounded-pill shadow-sm input-dark"
                     placeholder="Escribe tu mensaje..."
                     required
                     @keyup.enter="enviarMensaje(chat)"
@@ -355,27 +355,41 @@ import { conexionOk } from '../../conexionStore.js';
 
 <style scoped>
 /* Estilos mejorados para el chat */
-.chat-outer-container {
+
+.dark-bg {
   min-height: 100vh;
-  background: linear-gradient(135deg, #e0f7fa 0%, #e8f5e9 100%);
+  background: linear-gradient(135deg, #181c1f 0%, #23272b 100%);
   padding-top: 2rem;
   padding-bottom: 2rem;
+  color: #e0e0e0;
 }
 
-.chat-tabs {
-  background: #fff;
-  border-bottom: 2px solid #e0e0e0;
+.chat-tabs-dark {
+  background: #23272b;
+  border-bottom: 2px solid #222831;
 }
 
-.chat-content-container {
+.chat-tab-link-dark {
+  color: #b0b8b8 !important;
+  background: transparent !important;
+  border: none;
+  transition: background 0.2s, color 0.2s;
+}
+.chat-tab-link-dark.active, .chat-tab-link-dark:hover {
+  color: #fff !important;
+  background: #166534 !important;
+  border: none;
+}
+
+.chat-content-container-dark {
   min-height: 70vh;
-  background: #fff;
+  background: #23272b;
   border-radius: 0 0 1rem 1rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
   padding: 0;
 }
 
-.mensaje-cont {
+.mensaje-cont-dark {
   height: 55vh;
   border: none;
   overflow-x: hidden;
@@ -393,22 +407,33 @@ import { conexionOk } from '../../conexionStore.js';
   width: 100%;
 }
 
+
 .msg-bubble {
   max-width: 80%;
   word-break: break-word;
   font-size: 1.05rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
   border-radius: 1.5rem 1.5rem 1.5rem 0.5rem;
   margin-bottom: 0.2rem;
+  background: #23272b;
+  color: #e0e0e0;
+}
+.bg-dark-2 {
+  background: #23272b !important;
+  color: #e0e0e0 !important;
 }
 .msg-bubble.align-self-end {
   margin-left: auto;
   border-radius: 1.5rem 1.5rem 0.5rem 1.5rem;
 }
 
-.contactos-panel {
+
+.contactos-panel-dark {
   min-width: 180px;
   max-width: 220px;
+  background: #181c1f !important;
+  color: #e0e0e0 !important;
+  border-left: 1px solid #23272b !important;
 }
 
 .pointer {
